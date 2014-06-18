@@ -85,4 +85,106 @@
             restorable="true">
       </view>
    </extension>
+ <extension
+       point="org.eclipse.ui.commands">
+    <command
+          defaultHandler="university.wur.WorldUniversityRankingView$Handler"
+          id="lineup.demo.university.wur.cmd"
+          name="World University Ranking History">
+    </command>
+    <command
+          defaultHandler="nasatxl.NASATxlResultsView$Handler"
+          id="lineup.demo.nasatxl.cmd"
+          name="NASA Task Load Index User Study Results">
+    </command>
+    <command
+          defaultHandler="university.wur.WorldUniversityRanking2012View$Handler"
+          id="lineup.demo.university.wur2012.cmd"
+          name="World University Ranking 2012">
+    </command>
+    <command
+          defaultHandler="university.wur.WorldUniversityRanking2013View$Handler"
+          id="lineup.demo.university.wur2013.cmd"
+          name="World University Ranking 2013">
+    </command>
+    <command
+          defaultHandler="university.wur.WorldUniversityRankingEvaluation1View$Handler"
+          id="lineup.eval.university.wur2012.cmd"
+          name="World University Ranking 2012">
+    </command>
+    <command
+          defaultHandler="university.mup.MeasuringUniversityPerformanceView$Handler"
+          id="university.wur.WorldUniversityRankingEvaluation1View.cmd"
+          name="Measuring University Performance">
+    </command>
+    <command
+          defaultHandler="university.mixed.MixedView$Handler"
+          id="lineup.demo.university.mixed.cmd"
+          name="University Rankings 2012">
+    </command>
+    <command
+          defaultHandler="university.top100under50.Top100Under50View$Handler"
+          id="lineup.demo.university.top100under50.cmd"
+          name="Top 100 under 50 2012">
+    </command>
+    <command
+          defaultHandler="food.FoodView$Handler"
+          id="lineup.demo.food.cmd"
+          name="Food Nutrition">
+    </command>
+    <command
+          defaultHandler="chip.ChipView$Handler"
+          id="lineup.demo.chip.cmd"
+          name="Chip Smartphone Ranking">
+    </command>
+ </extension>
+ <extension
+       point="org.eclipse.ui.menus">
+    <menuContribution
+          locationURI="menu:org.caleydo.lineup.menu.demos">
+       <menu
+             label="Evaluation">
+          <command
+                commandId="lineup.demo.nasatxl.cmd"
+                style="push">
+          </command>
+          <command
+                commandId="lineup.eval.university.wur2012.cmd"
+                style="push">
+          </command>
+       </menu>
+       <command
+             commandId="lineup.demo.university.wur.cmd"
+             style="push">
+       </command>
+       <command
+             commandId="lineup.demo.university.wur2012.cmd"
+             style="push">
+       </command>
+       <command
+             commandId="lineup.demo.university.wur2013.cmd"
+             style="push">
+       </command>
+       <command
+             commandId="university.wur.WorldUniversityRankingEvaluation1View.cmd"
+             style="push">
+       </command>
+       <command
+             commandId="lineup.demo.university.mixed.cmd"
+             style="push">
+       </command>
+       <command
+             commandId="lineup.demo.food.cmd"
+             style="push">
+       </command>
+       <command
+             commandId="lineup.demo.university.top100under50.cmd"
+             style="push">
+       </command>
+       <command
+             commandId="lineup.demo.chip.cmd"
+             style="push">
+       </command>
+    </menuContribution>
+ </extension>
 </plugin>
