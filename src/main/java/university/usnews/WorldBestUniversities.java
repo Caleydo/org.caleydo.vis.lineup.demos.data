@@ -22,8 +22,8 @@ import org.caleydo.vis.lineup.model.StringRankColumnModel;
 
 import com.google.common.base.Function;
 
+import demo.IModelBuilder;
 import demo.RankTableDemo;
-import demo.RankTableDemo.IModelBuilder;
 
 /**
  * @author Samuel Gratzl

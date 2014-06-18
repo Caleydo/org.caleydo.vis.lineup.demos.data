@@ -27,7 +27,7 @@ import org.caleydo.core.util.color.ColorBrewer;
 
 import com.google.common.collect.ImmutableSet;
 
-import demo.RankTableDemo.IModelBuilder;
+import demo.IModelBuilder;
 import demo.project.model.RankTableSpec;
 
 /*

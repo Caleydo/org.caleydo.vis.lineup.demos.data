@@ -5,11 +5,11 @@
  ******************************************************************************/
 package university.wur;
 
-import org.caleydo.core.gui.command.AOpenViewHandler;
+import org.caleydo.core.internal.cmd.AOpenViewHandler;
 import org.caleydo.vis.lineup.model.RankTableModel;
 
 import demo.ARcpRankTableDemoView;
-import demo.RankTableDemo.IModelBuilder;
+import demo.IModelBuilder;
 import demo.project.model.RankTableSpec;
 
 /**

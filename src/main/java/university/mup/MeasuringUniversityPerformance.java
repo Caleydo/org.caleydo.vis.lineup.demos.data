@@ -29,8 +29,8 @@ import university.mup.MeasuringUniversityPerformanceData.Entry;
 
 import com.google.common.base.Function;
 
+import demo.IModelBuilder;
 import demo.RankTableDemo;
-import demo.RankTableDemo.IModelBuilder;
 import demo.ReflectionDoubleData;
 
 /**

@@ -5,10 +5,10 @@
  ******************************************************************************/
 package university.mup;
 
-import org.caleydo.core.gui.command.AOpenViewHandler;
+import org.caleydo.core.internal.cmd.AOpenViewHandler;
 
 import demo.ARcpRankTableDemoView;
-import demo.RankTableDemo.IModelBuilder;
+import demo.IModelBuilder;
 import demo.project.model.RankTableSpec;
 
 /**

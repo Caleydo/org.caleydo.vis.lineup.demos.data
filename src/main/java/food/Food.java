@@ -39,8 +39,8 @@ import org.caleydo.vis.lineup.model.RankTableModel;
 import org.caleydo.vis.lineup.model.StringRankColumnModel;
 import org.caleydo.vis.lineup.model.mapping.PiecewiseMapping;
 
+import demo.IModelBuilder;
 import demo.RankTableDemo;
-import demo.RankTableDemo.IModelBuilder;
 import demo.ReflectionData;
 
 /**

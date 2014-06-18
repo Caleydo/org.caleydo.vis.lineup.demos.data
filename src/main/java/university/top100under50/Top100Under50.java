@@ -30,8 +30,8 @@ import university.top100under50.Top100Under50Year.Row;
 
 import com.google.common.base.Function;
 
+import demo.IModelBuilder;
 import demo.RankTableDemo;
-import demo.RankTableDemo.IModelBuilder;
 import demo.ReflectionData;
 
 /**

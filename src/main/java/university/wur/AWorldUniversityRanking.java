@@ -24,7 +24,7 @@ import org.caleydo.vis.lineup.model.mixin.IDataBasedColumnMixin;
 
 import com.google.common.base.Function;
 
-import demo.RankTableDemo.IModelBuilder;
+import demo.IModelBuilder;
 import demo.ReflectionData;
 import demo.project.model.ACompositeColumnSpec;
 import demo.project.model.ARankColumnSpec;
