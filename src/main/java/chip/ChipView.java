@@ -6,6 +6,7 @@
 package chip;
 
 import generic.EInferer;
+import generic.GenericModelBuilder;
 import generic.GenericView;
 import generic.ImportSpec;
 import generic.ImportSpec.CategoricalColumnSpec;
@@ -22,12 +23,17 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
 
+import org.caleydo.core.internal.cmd.AOpenViewHandler;
 import org.caleydo.core.util.color.Color;
 import org.caleydo.core.util.color.ColorBrewer;
+import org.caleydo.vis.lineup.model.ARankColumnModel;
+import org.caleydo.vis.lineup.model.RankRankColumnModel;
+import org.caleydo.vis.lineup.model.RankTableModel;
+import org.caleydo.vis.lineup.model.StackedRankColumnModel;
 
+import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
 
-import demo.IModelBuilder;
 import demo.project.model.RankTableSpec;
 
 /*
@@ -36,6 +42,25 @@ import demo.project.model.RankTableSpec;
  */
 public class ChipView extends GenericView {
 	private static final String ID = "lineup.demo.chip";
+	private static int PRODUCT;
+	private static int PREIS;
+	private static int GESAMT;
+	private static int PREIS_LEISTUNG;
+	private static int TELEFON;
+	private static int INTERNET;
+	private static int MULTIMEDIA;
+	private static int HANDLING;
+	private static int APP_STORE;
+	private static int APP_STORE_A;
+	private static int KERNE;
+	private static int RAM;
+	private static int SAR;
+	private static int AKKU;
+	private static int GEWICHT;
+	private static int DISPLAY;
+	private static int PPI;
+	private static int SD;
+	private static int CAMERA;
 	/**
 	 *
 	 */
@@ -44,8 +69,13 @@ public class ChipView extends GenericView {
 	}
 
 	@Override
-	public IModelBuilder createModel(RankTableSpec tableSpec) {
-		return super.createModel(tableSpec);
+	protected GenericModelBuilder createBuilder(ImportSpec spec, RankTableSpec tableSpec) {
+		return new ChipModelBuilder(spec, tableSpec);
+	}
+
+	@Override
+	public String getViewGUIID() {
+		return ID;
 	}
 	/**
 	 * @return
@@ -55,9 +85,10 @@ public class ChipView extends GenericView {
 		Path temp;
 		try {
 			temp = Files.createTempFile("lineup", ".csv");
-			Files.copy(ChipView.class.getResourceAsStream("chip.csv"), temp, StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(ChipView.class.getResourceAsStream("chip_2014_09.txt"), temp,
+					StandardCopyOption.REPLACE_EXISTING);
 			spec.setDataSourcePath(temp.toString());
-			spec.setDelimiter(";");
+			spec.setDelimiter("\t");
 			spec.setLabel("Chip Handy Bestenliste");
 			List<ColumnSpec> columns = new ArrayList<>();
 			createColumns(columns);
@@ -74,83 +105,178 @@ public class ChipView extends GenericView {
 	 * @param columns
 	 */
 	private static void createColumns(List<ColumnSpec> columns) {
-		int i = 0;
+		int i = 0, j;
 		Deque<Color> f = new ArrayDeque<>(ColorBrewer.Set3.get(12));
 		f.addAll(ColorBrewer.Set2.get(8));
 		// Produkt
-		columns.add(cstring(i++));
-		// Produkt;Preis
-		columns.add(cdouble(i++, 0, Double.NaN).setColor(f.pollFirst(), null));
-		// Produkt;Preis;Gesamtwertung
-		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
-		// Produkt;Preis;Gesamtwertung;Preis-Leistung
-		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
-		// Produkt;Preis;Gesamtwertung;Preis-Leistung;Telefon und Akku
-		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
-		// Produkt;Preis;Gesamtwertung;Preis-Leistung;Telefon und Akku;Internet
-		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
-		// ;Multimedia
-		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
-		// ;Handling;App-Store;Getestet mit;App-Store-Anbindung;Prozessor;SAR-Wert ( W/kg);Akku: Online-Laufzeit
-		// (Stunden);Akku: Online-Zeit;Gewicht (Gramm);WLAN;UMTS: Daten empfangen;Display: Typ;Display: Diagonale
-		// (Zoll);Display: Auflösung;Display: Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
-		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
-		// ;App-Store;Getestet mit;App-Store-Anbindung;Prozessor;SAR-Wert ( W/kg);Akku: Online-Laufzeit (Stunden);Akku:
-		// Online-Zeit;Gewicht (Gramm);WLAN;UMTS: Daten empfangen;Display: Typ;Display: Diagonale (Zoll);Display:
-		// Auflösung;Display: Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
-		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
-		// ;Getestet mit;App-Store-Anbindung;Prozessor;SAR-Wert ( W/kg);Akku: Online-Laufzeit (Stunden);Akku:
-		// Online-Zeit;Gewicht (Gramm);WLAN;UMTS: Daten empfangen;Display: Typ;Display: Diagonale (Zoll);Display:
-		// Auflösung;Display: Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
+		columns.add(cstring(PRODUCT = i++));
+		// Preis
+		columns.add(cdouble(PREIS = i++, 0, Double.NaN).setColor(f.pollFirst(), null));
+		// Gesamtwertung
+		columns.add(cdouble(GESAMT = i++, 0, 100).setColor(f.pollFirst(), null));
+		// Preis-Leistung
+		columns.add(cdouble(PREIS_LEISTUNG = i++, 0, 100).setColor(f.pollFirst(), null));
+		// Telefon und Akku
+		columns.add(cdouble(TELEFON = i++, 0, 100).setColor(f.pollFirst(), null));
+		// Internet
+		columns.add(cdouble(INTERNET = i++, 0, 100).setColor(f.pollFirst(), null));
+		// Multimedia
+		columns.add(cdouble(MULTIMEDIA = i++, 0, 100).setColor(f.pollFirst(), null));
+		// Handling
+		columns.add(cdouble(HANDLING = i++, 0, 100).setColor(f.pollFirst(), null));
+		// App-Store
+		columns.add(cdouble(APP_STORE = i++, 0, 100).setColor(f.pollFirst(), null));
+		j = APP_STORE + 1;
+		// Getestet mit
 		i++;
-		// ;App-Store-Anbindung;Prozessor;SAR-Wert ( W/kg);Akku: Online-Laufzeit (Stunden);Akku: Online-Zeit;Gewicht
-		// (Gramm);WLAN;UMTS: Daten empfangen;Display: Typ;Display: Diagonale (Zoll);Display: Auflösung;Display:
-		// Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
+		// Aktuelles Betriebssystem
+		i++;
+		// Handbuch
+		i++;
+		// App-Store-Anbindung;Prozessor
+		APP_STORE_A = j++;
 		columns.add(category(i++, "Apple App Store", "BlackBerry App World", "Google Play", "Ovi Store",
 				"Samsung Apps", "Windows Phone Store").setColor(f.pollFirst(), null));
-		// ;Prozessor;SAR-Wert ( W/kg);Akku: Online-Laufzeit (Stunden);Akku: Online-Zeit;Gewicht (Gramm);WLAN;UMTS:
-		// Daten empfangen;Display: Typ;Display: Diagonale (Zoll);Display: Auflösung;Display: Pixeldichte (ppi);Speicher
-		// (GB);Kamera: Auflösung (Mpixel);UKW-Radio
+		// Prozessor
 		i++;
-		// ;SAR-Wert ( W/kg);Akku: Online-Laufzeit (Stunden);Akku: Online-Zeit;Gewicht (Gramm);WLAN;UMTS: Daten
-		// empfangen;Display: Typ;Display: Diagonale (Zoll);Display: Auflösung;Display: Pixeldichte (ppi);Speicher
-		// (GB);Kamera: Auflösung (Mpixel);UKW-Radio
-		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// ;Akku: Online-Laufzeit (Stunden);Akku: Online-Zeit;Gewicht (Gramm);WLAN;UMTS: Daten empfangen;Display:
-		// Typ;Display: Diagonale (Zoll);Display: Auflösung;Display: Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung
-		// (Mpixel);UKW-Radio
+		// Prozessor-Kerne
+		KERNE = j++;
+		columns.add(cdouble(i++, 1, 8).setColor(f.pollFirst(), null));
+		// Prozessor-Takt (MHz)
 		i++;
-		// ;Akku: Online-Zeit;Gewicht (Gramm);WLAN;UMTS: Daten empfangen;Display: Typ;Display: Diagonale (Zoll);Display:
-		// Auflösung;Display: Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
+		// Arbeitsspeicher (MByte)
+		RAM = j++;
+		columns.add(cdouble(i++, 0, 3072).setColor(f.pollFirst(), null));
+		// SAR-Wert (W/kg)
+		SAR = j++;
 		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// ;Gewicht (Gramm);WLAN;UMTS: Daten empfangen;Display: Typ;Display: Diagonale (Zoll);Display:
-		// Auflösung;Display: Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
-		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// ;WLAN;UMTS: Daten empfangen;Display: Typ;Display: Diagonale (Zoll);Display: Auflösung;Display: Pixeldichte
-		// (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
-		columns.add(category(i++, "802.11ac/n/g/b/a", "802.11g/b", "802.11n/g/b", "802.11n/g/b/a"));
-		// ;UMTS: Daten empfangen;Display: Typ;Display: Diagonale (Zoll);Display: Auflösung;Display: Pixeldichte
-		// (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
+		// Akku Sprechzeit (Stunden)
 		i++;
-		// ;Display: Typ;Display: Diagonale (Zoll);Display: Auflösung;Display: Pixeldichte (ppi);Speicher (GB);Kamera:
-		// Auflösung (Mpixel);UKW-Radio
-		columns.add(category(i++, "LCD", "OLED"));
-		// ;Display: Diagonale (Zoll);Display: Auflösung;Display: Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung
-		// (Mpixel);UKW-Radio
-		i++; // columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// ;Display: Auflösung;Display: Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
-		columns.add(category(i++, "1080 x 1920 Pixel", "240 x 320 Pixel", "240 x 400 Pixel", "320 x 480 Pixel",
-				"360 x 640 Pixel", "450 x 854 Pixel", "480 x 800 Pixel", "480 x 854 Pixel", "540 x 960 Pixel",
-				"640 x 1136 Pixel", "640 x 960 Pixel", "720 x 1280 Pixel", "720 x 720 Pixel", "768 x 1024 Pixel",
-				"768 x 1280 Pixel", "800 x 1280 Pixel").setColor(f.pollFirst(), null));
-		// ;Display: Pixeldichte (ppi);Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
+		// Akku Online-Laufzeit (Stunden)
+		AKKU = j++;
 		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// ;Speicher (GB);Kamera: Auflösung (Mpixel);UKW-Radio
+		// Akku Lade-Dauer (Stunden)
+		i++;
+		// Akku: Kapazität (mAh)
+		i++;
+		// Akku: Austauschbar
+		i++;
+		// Gesamt-Wertung Akku
+		i++;
+		// Gewicht (g)
+		GEWICHT = j++;
 		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// ;Kamera: Auflösung (Mpixel);UKW-Radio
+		// Höhe x Breite (mm)
+		i++;
+		// Dicke (mm)
+		i++;
+		// Anmutung
+		i++;
+		// WLAN
+		i++;
+		// GSM-Frequenzbänder
+		i++;
+		// EDGE
+		i++;
+		// UMTS: Daten empfangen
+		i++;
+		// UMTS: Daten versenden
+		i++;
+		// LTE: Unterstützte Frequenzbänder
+		i++;
+		// LTE: Cat-4
+		i++;
+		// Videotelefon
+		i++;
+		// Touchscreen
+		i++;
+		// Touchscreen: Reaktionsfreudigkeit
+		i++;
+		// Display: Typ
+		i++;
+		// Display: Abmessungen
+		i++;
+		// Display: Diagonale (Zoll)
+		i++;
+		// Display: Auflösung
+		DISPLAY = j++;
+		columns.add(category(i++, "1080 x 1920", "720 x 1280", "1440 x 2560", "640 x 1136", "768 x 1280",
+				"540 x 960",
+				"480 x 800", "480 x 854", "640 x 960", "768 x 1024", "320 x 480", "720 x 720", "450 x 854", "240 x 320")
+				.setColor(f.pollFirst(), null));
+		// Display: Pixeldichte (ppi)
+		PPI = j++;
 		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// ;UKW-Radio
-		columns.add(category(i++, "-", "ja", "Mit RDS"));
+		// Display: Farbanzahl
+		i++;
+		// Display: Reflektions-Kontrast
+		i++;
+		// Display: Helligkeit bei Umgebungslicht (cd/m²)
+		i++;
+		// Display: Schachbrett-Kontrast
+		i++;
+		// Sprachaufnahme
+		i++;
+		// Profile
+		i++;
+		// Push-E-Mail
+		i++;
+		// E-Mail per Exchange
+		i++;
+		// Speicher (MByte)
+		SD = j++;
+		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
+		// Speicherkarten-Slot
+		i++;
+		// USB-Version
+		i++;
+		// USB-Buchse
+		i++;
+		// USB: Zeit für Übertragung von 100 MByte (s)
+		i++;
+		// SIM-Slot
+		i++;
+		// Bluetooth
+		i++;
+		// NFC
+		i++;
+		// Kamera: Auflösung (Megapixel)
+		CAMERA = j++;
+		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
+		// Front-Kamera: Auflösung
+		i++;
+		// Kamera: Autofokus
+		i++;
+		// Kamera: Blitztyp
+		i++;
+		// Camcorder-Auflösung
+		i++;
+		// TV-Ausgang
+		i++;
+		// Musik-Player: Formate
+		i++;
+		// Video-Player
+		i++;
+		// UKW-Radio
+		i++;
+		// Navi: GPS-Empänger
+		i++;
+		// Navi: Software
+		i++;
+		// Navi: Vollversion
+		i++;
+		// Navi: Software-Typ
+		i++;
+		// Navi: Landkarten
+		i++;
+		// Navi: GPS-Fix
+		i++;
+		// Benchmark: Browsermark 1.0
+		i++;
+		// Benchmark: Browsermark 2.0
+		i++;
+		// Getestet am
+		i++;
 
 	}
 
@@ -169,6 +295,72 @@ public class ChipView extends GenericView {
 
 	private static ColumnSpec cstring(int col) {
 		return new StringColumnSpec(col);
+	}
+
+	public static class Handler extends AOpenViewHandler {
+		public Handler() {
+			super(ID, true);
+		}
+	}
+
+	/**
+	 * @param table
+	 * @param headers
+	 * @param spec
+	 */
+	public static void initialColumns(RankTableModel table, final String[] headers, ImportSpec spec) {
+
+		table.add(new RankRankColumnModel());
+		if (headers == null)
+			return;
+
+		final List<ColumnSpec> cols = spec.getColumns();
+		final Function<Integer, ARankColumnModel> create = new Function<Integer, ARankColumnModel>() {
+			@Override
+			public ARankColumnModel apply(Integer input) {
+				return cols.get(input).create(headers, input);
+			}
+		};
+
+		table.add(create.apply(PRODUCT));
+		table.add(create.apply(PREIS));
+		table.add(create.apply(PREIS_LEISTUNG));
+
+		StackedRankColumnModel s = new StackedRankColumnModel();
+		table.add(s);
+
+		s.add(create.apply(TELEFON).setWidth(20 * 10));
+		s.add(create.apply(INTERNET).setWidth(20 * 10));
+		s.add(create.apply(MULTIMEDIA).setWidth(20 * 10));
+		s.add(create.apply(HANDLING).setWidth(30 * 10));
+		s.add(create.apply(APP_STORE).setWidth(10 * 10));
+
+		s.setWidth(300);
+		s.orderByMe();
+
+		table.add(create.apply(DISPLAY));
+		table.add(create.apply(KERNE));
+		table.add(create.apply(RAM));
+		table.add(create.apply(AKKU));
+		table.add(create.apply(CAMERA));
+
+		ARankColumnModel c;
+		c = create.apply(APP_STORE_A);
+		table.add(c);
+		c.hide();
+
+		c = create.apply(SAR);
+		table.add(c);
+		c.hide();
+		c = create.apply(GEWICHT);
+		table.add(c);
+		c.hide();
+		c = create.apply(PPI);
+		table.add(c);
+		c.hide();
+		c = create.apply(SD);
+		table.add(c);
+		c.hide();
 	}
 }
 

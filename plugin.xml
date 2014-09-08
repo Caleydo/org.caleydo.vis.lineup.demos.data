@@ -9,7 +9,7 @@
             class="university.wur.WorldUniversityRankingView"
             id="lineup.demo.university.wur"
             name="World University Ranking History"
-            restorable="true">
+            restorable="false">
       </view>
       <view
             allowMultiple="true"
@@ -32,7 +32,7 @@
             class="university.wur.WorldUniversityRanking2013View"
             id="lineup.demo.university.wur2013"
             name="World University Ranking 2013"
-            restorable="true">
+            restorable="false">
       </view>
       <view
             allowMultiple="true"
@@ -82,7 +82,7 @@
             class="chip.ChipView"
             id="lineup.demo.chip"
             name="Chip Smartphone Ranking"
-            restorable="true">
+            restorable="false">
       </view>
    </extension>
  <extension
@@ -186,5 +186,30 @@
              style="push">
        </command>
     </menuContribution>
+    <menuContribution
+          locationURI="menu:org.eclipse.ui.main.menu">
+       <menu
+             id="org.caleydo.lineup.menu.sim"
+             label="SIM 2014">
+          <command
+                commandId="lineup.demo.university.wur.cmd"
+                style="push">
+          </command>
+          <command
+                commandId="lineup.demo.university.wur2013.cmd"
+                style="push">
+          </command>
+          <command
+                commandId="lineup.demo.chip.cmd"
+                style="push">
+          </command>
+       </menu>
+    </menuContribution>
+ </extension>
+ <extension
+       point="org.caleydo.vis.lineup.demo.initial">
+    <view
+          view="lineup.demo.chip">
+    </view>
  </extension>
 </plugin>
