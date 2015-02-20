@@ -46,21 +46,23 @@ public class ChipView extends GenericView {
 	private static int PREIS;
 	private static int GESAMT;
 	private static int PREIS_LEISTUNG;
-	private static int TELEFON;
-	private static int INTERNET;
-	private static int MULTIMEDIA;
-	private static int HANDLING;
-	private static int APP_STORE;
-	private static int APP_STORE_A;
-	private static int KERNE;
+
+	private static int AKKU;
+	private static int AUSSTATTUNG;
+	private static int DISPLAY;
+	private static int CAMERA;
+	private static int PERFORMANCE;
+	private static int TELEFON_UND_SOUND;
+	
+	private static int PROZESSOR_TAKT;
 	private static int RAM;
 	private static int SAR;
-	private static int AKKU;
 	private static int GEWICHT;
-	private static int DISPLAY;
-	private static int PPI;
-	private static int SD;
-	private static int CAMERA;
+	private static int DISPLAY_RESOLUTION;
+	private static int CAMERA_RESOLUTION;
+	private static int FRONT_CAMERA_RESOLUTION;
+	
+	
 	/**
 	 *
 	 */
@@ -85,7 +87,7 @@ public class ChipView extends GenericView {
 		Path temp;
 		try {
 			temp = Files.createTempFile("lineup", ".csv");
-			Files.copy(ChipView.class.getResourceAsStream("chip_2014_09.txt"), temp,
+			Files.copy(ChipView.class.getResourceAsStream("chip_2015_02.csv"), temp,
 					StandardCopyOption.REPLACE_EXISTING);
 			spec.setDataSourcePath(temp.toString());
 			spec.setDelimiter("\t");
@@ -105,178 +107,193 @@ public class ChipView extends GenericView {
 	 * @param columns
 	 */
 	private static void createColumns(List<ColumnSpec> columns) {
-		int i = 0, j;
+		int i = 0, j = 0;
 		Deque<Color> f = new ArrayDeque<>(ColorBrewer.Set3.get(12));
+		
 		f.addAll(ColorBrewer.Set2.get(8));
-		// Produkt
-		columns.add(cstring(PRODUCT = i++));
-		// Preis
-		columns.add(cdouble(PREIS = i++, 0, Double.NaN).setColor(f.pollFirst(), null));
-		// Gesamtwertung
-		columns.add(cdouble(GESAMT = i++, 0, 100).setColor(f.pollFirst(), null));
-		// Preis-Leistung
-		columns.add(cdouble(PREIS_LEISTUNG = i++, 0, 100).setColor(f.pollFirst(), null));
-		// Telefon und Akku
-		columns.add(cdouble(TELEFON = i++, 0, 100).setColor(f.pollFirst(), null));
-		// Internet
-		columns.add(cdouble(INTERNET = i++, 0, 100).setColor(f.pollFirst(), null));
-		// Multimedia
-		columns.add(cdouble(MULTIMEDIA = i++, 0, 100).setColor(f.pollFirst(), null));
-		// Handling
-		columns.add(cdouble(HANDLING = i++, 0, 100).setColor(f.pollFirst(), null));
-		// App-Store
-		columns.add(cdouble(APP_STORE = i++, 0, 100).setColor(f.pollFirst(), null));
-		j = APP_STORE + 1;
-		// Getestet mit
+		
+		//Rang
 		i++;
-		// Aktuelles Betriebssystem
+		//Produkt
+		PRODUCT = j++;
+		columns.add(cstring(i++));
+		//Preis
+		PREIS = j++;
+		columns.add(cdouble(i++, 0, Double.NaN).setColor(f.pollFirst(), null));
+		//Gesamt- wertung
+		GESAMT = j++;
+		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
+		//Preis-Leistung
+		PREIS_LEISTUNG = j++;
+		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
+		//Akku(15%)
+		AKKU = j++;
+		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
+		//Ausstattung(20%)
+		AUSSTATTUNG = j++;
+		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
+		//Display(15%)
+		DISPLAY = j++;
+		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
+		//Digitalkamera(10%)
+		CAMERA = j++;
+		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
+		//Performance & Bedienung(30%)
+		PERFORMANCE = j++;
+		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
+		//Telefon & Sound(10%)
+		TELEFON_UND_SOUND = j++;
+		columns.add(cdouble(i++, 0, 100).setColor(f.pollFirst(), null));
+		//Getestet mit
 		i++;
-		// Handbuch
+		//Aktuelles Betriebssystem
 		i++;
-		// App-Store-Anbindung;Prozessor
-		APP_STORE_A = j++;
-		columns.add(category(i++, "Apple App Store", "BlackBerry App World", "Google Play", "Ovi Store",
-				"Samsung Apps", "Windows Phone Store").setColor(f.pollFirst(), null));
-		// Prozessor
+		//Update für Betriebssystem geplant
 		i++;
-		// Prozessor-Kerne
-		KERNE = j++;
-		columns.add(cdouble(i++, 1, 8).setColor(f.pollFirst(), null));
-		// Prozessor-Takt (MHz)
+		//App-Store-Anbindung
 		i++;
-		// Arbeitsspeicher (MByte)
+		//Prozessor
+		i++;
+		//Prozessor-Architektur
+		i++;
+		//Prozessor-Takt
+		PROZESSOR_TAKT = j++;
+		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
+		//Arbeitsspeicher
 		RAM = j++;
-		columns.add(cdouble(i++, 0, 3072).setColor(f.pollFirst(), null));
-		// SAR-Wert (W/kg)
+		columns.add(cdouble(i++, 0, Double.NaN).setColor(f.pollFirst(), null));
+		//SAR-Wert
 		SAR = j++;
 		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// Akku Sprechzeit (Stunden)
+		//Akku: Sprechzeit
 		i++;
-		// Akku Online-Laufzeit (Stunden)
-		AKKU = j++;
-		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// Akku Lade-Dauer (Stunden)
+		//Akku: Online-Laufzeit
 		i++;
-		// Akku: KapazitÃ¤t (mAh)
+		//Induktives Laden
 		i++;
-		// Akku: Austauschbar
+		//Akku: Lade-Dauer
 		i++;
-		// Gesamt-Wertung Akku
+		//Akku: Kapazität
 		i++;
-		// Gewicht (g)
+		//Akku: Austauschbar
+		i++;
+		//Gewicht
 		GEWICHT = j++;
 		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// HÃ¶he x Breite (mm)
+		//Höhe x Breite
 		i++;
-		// Dicke (mm)
+		//Dicke
 		i++;
-		// Anmutung
+		//WLAN
 		i++;
-		// WLAN
+		//GSM-Frequenzbänder
 		i++;
-		// GSM-FrequenzbÃ¤nder
+		//UMTS: Daten empfangen
 		i++;
-		// EDGE
+		//UMTS: Daten versenden
 		i++;
-		// UMTS: Daten empfangen
+		//LTE: Unterstützte Frequenzbänder
 		i++;
-		// UMTS: Daten versenden
+		//LTE: Cat-4
 		i++;
-		// LTE: UnterstÃ¼tzte FrequenzbÃ¤nder
+		//LTE: Cat-6
 		i++;
-		// LTE: Cat-4
+		//LTE-Advanced
 		i++;
-		// Videotelefon
+		//Voice over LTE
 		i++;
-		// Touchscreen
+		//Display: Typ
 		i++;
-		// Touchscreen: Reaktionsfreudigkeit
+		//Display: Diagonale
 		i++;
-		// Display: Typ
+		//Display: Größe in Millimeter
 		i++;
-		// Display: Abmessungen
-		i++;
-		// Display: Diagonale (Zoll)
-		i++;
-		// Display: AuflÃ¶sung
-		DISPLAY = j++;
-		columns.add(category(i++, "1080 x 1920", "720 x 1280", "1440 x 2560", "640 x 1136", "768 x 1280",
-				"540 x 960",
-				"480 x 800", "480 x 854", "640 x 960", "768 x 1024", "320 x 480", "720 x 720", "450 x 854", "240 x 320")
+		//Display: Auflösung
+		DISPLAY_RESOLUTION = j++;
+		columns.add(category(i++, "1080 x 1920", "1140 x 2560", "1440 x 2560", "1600 x 2560", "320 x 480", "480 x 800", "480 x 854", "540 x 960", "640 x 1136", "720 x 1080", "720 x 1280", "750 x 1334")
 				.setColor(f.pollFirst(), null));
-		// Display: Pixeldichte (ppi)
-		PPI = j++;
+		//Display:dichte
+		i++;
+		//Display: Helligkeit ohne Umgebungslicht
+		i++;
+		//Display: Schachbrett-Kontrast
+		i++;
+		//Status-LED
+		i++;
+		//SIM-Slot
+		i++;
+		//Dual-Sim
+		i++;
+		//IP-Standard
+		i++;
+		//Fingerprint Reader
+		i++;
+		//USB OTG
+		i++;
+		//Speicher
+		i++;
+		//Speicherkarten-Slot
+		i++;
+		//USB-Buchse
+		i++;
+		//Bluetooth
+		i++;
+		//Infrarot
+		i++;
+		//NFC
+		i++;
+		//Kamera: Auflösung
+		CAMERA_RESOLUTION = j++;
 		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// Display: Farbanzahl
+		//Kamera: Optischer Bildstabilisator
 		i++;
-		// Display: Reflektions-Kontrast
+		//Kamera: Rauschen
 		i++;
-		// Display: Helligkeit bei Umgebungslicht (cd/mÂ²)
+		//Kamera: Deadleaves LOW10
 		i++;
-		// Display: Schachbrett-Kontrast
+		//Kamera: Deadleaves FULL10
 		i++;
-		// Sprachaufnahme
+		//Kamera: Farbtreue
 		i++;
-		// Profile
+		//Kamera: Kleinste Brennweite
 		i++;
-		// Push-E-Mail
+		//Kamera: Verzeichnung
 		i++;
-		// E-Mail per Exchange
+		//Kamera: Mindestabstand Makro
 		i++;
-		// Speicher (MByte)
-		SD = j++;
+		//Kamera: Vignettierung
+		i++;
+		//Kamera: Auslöseverzögerung mit AF
+		i++;
+		//Kamera: Blickwinkel Frontkamera
+		i++;
+		//Kamera: Autofokus
+		i++;
+		//Kamera: Extra Auslösetaste
+		i++;
+		//Kamera: Blitztyp
+		i++;
+		//Camcorder-Auflösung
+		i++;
+		//Front-Kamera: Auflösung
+		FRONT_CAMERA_RESOLUTION = j++;
 		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// Speicherkarten-Slot
 		i++;
-		// USB-Version
+		//TV-Ausgang
 		i++;
-		// USB-Buchse
+		//Kopfhörer-Ausgang
 		i++;
-		// USB: Zeit fÃ¼r Ãœbertragung von 100 MByte (s)
+		//Firmware-Version
 		i++;
-		// SIM-Slot
+		//Navi: Software
 		i++;
-		// Bluetooth
+		//Navi: Software-Typ
 		i++;
-		// NFC
+		//HD-Voice
 		i++;
-		// Kamera: AuflÃ¶sung (Megapixel)
-		CAMERA = j++;
-		columns.add(cdouble(i++, Double.NaN, Double.NaN).setColor(f.pollFirst(), null));
-		// Front-Kamera: AuflÃ¶sung
+		//
 		i++;
-		// Kamera: Autofokus
-		i++;
-		// Kamera: Blitztyp
-		i++;
-		// Camcorder-AuflÃ¶sung
-		i++;
-		// TV-Ausgang
-		i++;
-		// Musik-Player: Formate
-		i++;
-		// Video-Player
-		i++;
-		// UKW-Radio
-		i++;
-		// Navi: GPS-EmpÃ¤nger
-		i++;
-		// Navi: Software
-		i++;
-		// Navi: Vollversion
-		i++;
-		// Navi: Software-Typ
-		i++;
-		// Navi: Landkarten
-		i++;
-		// Navi: GPS-Fix
-		i++;
-		// Benchmark: Browsermark 1.0
-		i++;
-		// Benchmark: Browsermark 2.0
-		i++;
-		// Getestet am
-		i++;
+		//
 
 	}
 
@@ -322,43 +339,36 @@ public class ChipView extends GenericView {
 			}
 		};
 
-		table.add(create.apply(PRODUCT));
-		table.add(create.apply(PREIS));
+		table.add(create.apply(PRODUCT).setWidth(300));
+		table.add(create.apply(PREIS).setWidth(120));
 		table.add(create.apply(PREIS_LEISTUNG));
 
 		StackedRankColumnModel s = new StackedRankColumnModel();
 		table.add(s);
 
-		s.add(create.apply(TELEFON).setWidth(20 * 10));
-		s.add(create.apply(INTERNET).setWidth(20 * 10));
-		s.add(create.apply(MULTIMEDIA).setWidth(20 * 10));
-		s.add(create.apply(HANDLING).setWidth(30 * 10));
-		s.add(create.apply(APP_STORE).setWidth(10 * 10));
+		
+		s.add(create.apply(AKKU).setWidth(15 * 10));
+		s.add(create.apply(AUSSTATTUNG).setWidth(20 * 10));
+		s.add(create.apply(DISPLAY).setWidth(15 * 10));
+		s.add(create.apply(CAMERA).setWidth(10 * 10));
+		s.add(create.apply(PERFORMANCE).setWidth(30 * 10));
+		s.add(create.apply(TELEFON_UND_SOUND).setWidth(10 * 10));
 
-		s.setWidth(300);
+		s.setWidth(500);
 		s.orderByMe();
 
-		table.add(create.apply(DISPLAY));
-		table.add(create.apply(KERNE));
+		table.add(create.apply(DISPLAY_RESOLUTION));
+		table.add(create.apply(CAMERA_RESOLUTION));
+		table.add(create.apply(FRONT_CAMERA_RESOLUTION));
+		table.add(create.apply(PROZESSOR_TAKT));
 		table.add(create.apply(RAM));
-		table.add(create.apply(AKKU));
-		table.add(create.apply(CAMERA));
 
 		ARankColumnModel c;
-		c = create.apply(APP_STORE_A);
-		table.add(c);
-		c.hide();
-
+		
 		c = create.apply(SAR);
 		table.add(c);
 		c.hide();
 		c = create.apply(GEWICHT);
-		table.add(c);
-		c.hide();
-		c = create.apply(PPI);
-		table.add(c);
-		c.hide();
-		c = create.apply(SD);
 		table.add(c);
 		c.hide();
 	}
