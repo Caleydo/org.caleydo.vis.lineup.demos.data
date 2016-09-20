@@ -2,9 +2,9 @@
  * How to use
  * 1. Open [Chip Smartphone Test](http://www.chip.de/bestenlisten/Bestenliste-Handys--index/detail/id/900/)
  * 2. Open the browser console
- * 3. Paste the code below and execute it
+ * 3. Paste the JS code below and execute it
  * 4. Copy the simple table to excel
- * 5. Remove columsn and remove some text garbage: ab €, units, ...
+ * 5. Remove columns and remove some text garbage: ab €, units, ...
  * 6. Save as CSV tab separated with UTF-8 encoding
  * 7. Open in text editor and regex replace: ,(\d) -> .$1
  */ 
